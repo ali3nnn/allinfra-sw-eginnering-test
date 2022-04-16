@@ -1,17 +1,17 @@
-import TroopsController from "./controller/controller";
 import { validateOrReject } from 'class-validator'
+import TroopsController from "./controller/controller";
 
 const myArgs = process.argv.slice(2);
 
 let size;
 if (myArgs.length) {
-    size = Number(myArgs[0])
+    size = Number(myArgs[0]);
 } else {
-    size = 167
+    size = 167;
 }
 
 export const handler = async (size) => {
-    let controller = new TroopsController(size)
+    let controller = new TroopsController(size);
 
     try {
         await validateOrReject(controller);
@@ -22,9 +22,7 @@ export const handler = async (size) => {
 
 }
 
-(async function(){
-    console.log(await handler(size));
-})()
+handler(size);
 
 
 
