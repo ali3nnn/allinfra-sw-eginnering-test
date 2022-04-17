@@ -25,7 +25,7 @@
 }
 
 .assetModal {
-    background: #063a74;
+    background: #0967D2;
     padding: 3rem;
     position: fixed;
     z-index: 99;
@@ -36,7 +36,16 @@
     transform: translate(-50%, -50%);
     color: white;
     margin: auto;
-    border: 20px solid white;
+    border-radius: 0.5rem;
+}
+
+.modalWrapper {
+    position: fixed;
+    z-index: 99;
+    background: #000000d4;
+    top: 0;
+    bottom: 0;
+    width: 100%;
 }
 
 .assetModal button {
@@ -88,13 +97,16 @@
 }
 
 .removeButton {
-    background: rgb(239 52 52);
     position: absolute;
     right: 0;
     top: 0;
     bottom: 0;
     width: 3rem;
     cursor: pointer;
+}
+
+.removeButton:hover {
+    background: rgb(239 52 52);
 }
 
 .removeButton svg {
@@ -105,13 +117,16 @@
 }
 
 .updateButton {
-    background: rgb(239 172 52);
     position: absolute;
     right: 3rem;
     top: 0;
     bottom: 0;
     width: 3rem;
     cursor: pointer;
+}
+
+.updateButton:hover {
+    background: rgb(239 172 52);
 }
 
 .updateButton svg {

@@ -40,14 +40,16 @@ export default function Home() {
     const updateAssetProps = {
         updatePopUpId,
         setUpdatePopUp,
-        setData
+        setData,
+        data
     }
 
     return (
         <>
             <div className="dashboard">
                 <Button onClick={() => setCreateAssetPopUp(!createAssetPopUp)}>Create an asset</Button>
-                <Button onClick={getAll}>Get all assets</Button>
+                <Button onClick={() => getAll()}>Get all assets</Button>
+                <Button onClick={() => setData()}>Clear screen</Button>
             </div>
             {createAssetPopUp && <CreateAsset setPopUp={setCreateAssetPopUp} setData={setData} />}
             {updatePopUp && <UpdateAsset {...updateAssetProps} />}

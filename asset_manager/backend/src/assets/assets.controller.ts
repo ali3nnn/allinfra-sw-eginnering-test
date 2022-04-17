@@ -14,7 +14,6 @@ export class AssetsController {
   async create(@Body() createAssetDto: CreateAssetDto) {
     try {
       const asset = await this.assetsService.create(createAssetDto);
-      console.log(asset)
       return {
         statusCode: HttpStatus.CREATED,
         message: "Asset added successfully",
@@ -51,23 +50,23 @@ export class AssetsController {
 
   }
 
-  // @Get(':id')
-  // @HttpCode(HttpStatus.OK)
-  // async findOne(@Param('id') id: string) {
+  @Get(':id')
+  @HttpCode(HttpStatus.OK)
+  async findOne(@Param('id') id: string) {
 
-  //   try {
-  //     const result = await this.assetsService.findOne(id);
-  //     return {
-  //       statusCode: HttpStatus.OK,
-  //       message: `Asset retrieved successfully!`,
-  //       result: [result]
-  //     };
+    try {
+      const result = await this.assetsService.findOne(id);
+      return {
+        statusCode: HttpStatus.OK,
+        message: `Asset retrieved successfully!`,
+        result: [result]
+      };
 
-  //   } catch (error) {
-  //     throw new HttpException(`${error}`, HttpStatus.INTERNAL_SERVER_ERROR);
-  //   }
+    } catch (error) {
+      throw new HttpException(`${error}`, HttpStatus.INTERNAL_SERVER_ERROR);
+    }
 
-  // }
+  }
 
   @Patch(':id')
   @HttpCode(HttpStatus.CREATED)

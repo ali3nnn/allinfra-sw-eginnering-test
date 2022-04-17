@@ -35,10 +35,14 @@ export default function Buttons(props) {
     }
 
     const hideCard = (e) => {
-        const cardEl = e.target.parentElement.parentElement
         const idToRemove = e.target.attributes.assetid.value
         const dataWithIdRemoved = data.filter(asset => asset._id !== idToRemove)
-        setData(dataWithIdRemoved)
+        const isCreateAssetResult = data[0].createAssetResult || false
+        if(isCreateAssetResult) {
+            setData(["createdItemRemoved"])
+        } else {
+            setData(dataWithIdRemoved)
+        }
     }
 
     const removeAssetFromDb = async (id) => await axios.delete(`${REACT_APP_BASE_URL}/assets/${id}`)

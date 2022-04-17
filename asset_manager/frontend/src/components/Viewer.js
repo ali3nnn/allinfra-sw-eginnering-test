@@ -16,6 +16,8 @@ export default function Viewer(props) {
                 return "Error when retrieving data"
             case "removeError":
                 return "Error removing the item"
+            case "createdItemRemoved":
+                return " "
             default:
                 return
         }

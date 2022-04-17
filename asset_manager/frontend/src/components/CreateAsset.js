@@ -31,7 +31,7 @@ export default function CreateAsset(props) {
                         [e.target.value]: e.target.nextSibling.value
                     }
                 })
-                console.log(asset)
+                // console.log(asset)
                 break;
             case "metadata":
                 setAsset({
@@ -41,14 +41,14 @@ export default function CreateAsset(props) {
                         [e.target.previousSibling.value]: e.target.value
                     }
                 })
-                console.log(asset)
+                // console.log(asset)
                 break;
             default:
                 setAsset({
                     ...asset,
                     [e.target.name]: e.target.value
                 })
-                console.log(asset)
+                // console.log(asset)
                 break;
         }
     }
@@ -57,41 +57,42 @@ export default function CreateAsset(props) {
         e.preventDefault();
         const newAsset = asset
         const response = await axios.post(`${REACT_APP_BASE_URL}/assets`, newAsset)
-        setData(response.data.result)
+        setData([{
+            ...response.data.result[0],
+            "createAssetResult": true
+        }])
         setPopUp(false)
     }
 
-    // const addMeta = () => {
-
-    // }
-
     return (
-        <div className="assetModal">
-            <h1>Create a new asset</h1>
-            <Form onSubmit={onSubmit}>
-                <FormGroup>
-                    <Label>Type</Label>
-                    <Input type="text" name="type" onChange={onChange} placeholder="Enter type" required></Input>
-                </FormGroup>
-                <FormGroup>
-                    <Label>Serial</Label>
-                    <Input type="text" name="serial" onChange={onChange} placeholder="Enter serial" required></Input>
-                </FormGroup>
-                <FormGroup>
-                    <Label>Color</Label>
-                    <Input type="text" name="color" onChange={onChange} placeholder="Enter color" required></Input>
-                </FormGroup>
-                <FormGroup>
-                    <Label>Metadata</Label>
-                    <FormGroup className="metadata" onChange={onChange}>
-                        <Input type="text" name="metakey" placeholder="Key" required></Input>
-                        <Input type="text" name="metadata" placeholder="Value" required></Input>
+        <div className="modalWrapper">
+            <div className="assetModal">
+                <h1>Create a new asset</h1>
+                <Form onSubmit={onSubmit}>
+                    <FormGroup>
+                        <Label>Type</Label>
+                        <Input type="text" name="type" onChange={onChange} placeholder="Enter type" required></Input>
                     </FormGroup>
-                    {/* <div>Add meta</div> */}
-                </FormGroup>
-                <Button type="submit">Create asset</Button>
-                <div className="btn btn-danger ml-2" onClick={() => setPopUp(false)}>Close</div>
-            </Form>
+                    <FormGroup>
+                        <Label>Serial</Label>
+                        <Input type="text" name="serial" onChange={onChange} placeholder="Enter serial" required></Input>
+                    </FormGroup>
+                    <FormGroup>
+                        <Label>Color</Label>
+                        <Input type="text" name="color" onChange={onChange} placeholder="Enter color" required></Input>
+                    </FormGroup>
+                    <FormGroup>
+                        <Label>Metadata</Label>
+                        <FormGroup className="metadata" onChange={onChange}>
+                            <Input type="text" name="metakey" placeholder="Key" required></Input>
+                            <Input type="text" name="metadata" placeholder="Value" required></Input>
+                        </FormGroup>
+                        {/* <div>Add meta</div> */}
+                    </FormGroup>
+                    <Button type="submit">Create asset</Button>
+                    <div className="btn btn-danger ml-2" onClick={() => setPopUp(false)}>Close</div>
+                </Form>
+            </div>
         </div>
     )
 }
