@@ -9,7 +9,6 @@ async function bootstrap() {
   const config = new DocumentBuilder().setTitle('Asset Manager')
                       .setDescription("Asset Manager API Application")
                       .setVersion('v1')
-                      .addTag('assets')
                       .build();
 
   const document = SwaggerModule.createDocument(app, config);

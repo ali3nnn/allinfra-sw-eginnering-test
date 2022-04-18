@@ -1,15 +1,17 @@
 import { Controller, Get, Post, Body, Patch, Param, Delete, HttpStatus, HttpException, HttpCode } from '@nestjs/common';
-import { ApiCreatedResponse } from '@nestjs/swagger';
+import { ApiCreatedResponse, ApiOperation, ApiHeader, ApiTags, ApiResponse } from '@nestjs/swagger';
 import { AssetsService } from './assets.service';
 import { CreateAssetDto } from './dto/create-asset.dto';
 import { UpdateAssetDto } from './dto/update-asset.dto';
 
+@ApiTags('Assets Controller')
 @Controller('assets')
 export class AssetsController {
   constructor(private readonly assetsService: AssetsService) { }
 
   @Post()
   @HttpCode(HttpStatus.CREATED)
+  @ApiOperation({ summary: 'Add a new asset into the database' })
   @ApiCreatedResponse({ type: CreateAssetDto })
   async create(@Body() createAssetDto: CreateAssetDto) {
     try {
@@ -26,6 +28,7 @@ export class AssetsController {
 
   @Get()
   @HttpCode(HttpStatus.OK)
+  @ApiOperation({ summary: 'Get all assets from the database' })
   @ApiCreatedResponse({ type: [CreateAssetDto] })
   async findAll() {
     try {
@@ -37,7 +40,7 @@ export class AssetsController {
           message: `No assets!`,
           result
         };
-      } 
+      }
 
       return {
         statusCode: HttpStatus.OK,
@@ -52,6 +55,8 @@ export class AssetsController {
 
   @Get(':id')
   @HttpCode(HttpStatus.OK)
+  @ApiOperation({ summary: 'Get one asset from the database by ID' })
+  @ApiCreatedResponse({ type: [CreateAssetDto] })
   async findOne(@Param('id') id: string) {
 
     try {
@@ -70,6 +75,7 @@ export class AssetsController {
 
   @Patch(':id')
   @HttpCode(HttpStatus.CREATED)
+  @ApiOperation({ summary: 'Update asset properties by ID' })
   @ApiCreatedResponse({ type: UpdateAssetDto })
   async update(@Param('id') id: string, @Body() updateAssetDto: UpdateAssetDto) {
     try {
@@ -87,6 +93,7 @@ export class AssetsController {
 
   @Delete(':id')
   @HttpCode(HttpStatus.OK)
+  @ApiOperation({ summary: 'Remove asset by ID' })
   async remove(@Param('id') id: string) {
     try {
       await this.assetsService.remove(id);
