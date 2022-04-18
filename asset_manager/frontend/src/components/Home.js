@@ -24,7 +24,11 @@ export default function Home() {
             const assetsData = response.data.result.reverse()
             setData(assetsData)
         } catch (error) {
-            setData(["getError"])
+            if (error.response.status === 404) {
+                setData([])
+            } else {
+                setData(["getError"])
+            }
         }
     }
 
