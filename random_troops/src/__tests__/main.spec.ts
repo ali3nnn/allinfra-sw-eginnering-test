@@ -13,14 +13,14 @@ describe("handler", () => {
     it('should generate 100 soldiers in total', async () => {
         const result = await handler(100);
         // @ts-ignore
-        const troopSize = Object.values(result).reduce((a, b) => a + b)
+        const troopSize = Object.values(result).reduce((a, b) => a + b);
         expect(troopSize).toBe(100);
     })
 
     it('should generate 500 soldiers in total', async () => {
         const result = await handler(500);
         // @ts-ignore
-        const troopSize = Object.values(result).reduce((a, b) => a + b)
+        const troopSize = Object.values(result).reduce((a, b) => a + b);
         expect(troopSize).toBe(500);
     })
 
