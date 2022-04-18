@@ -8,11 +8,9 @@ import {
 } from "reactstrap";
 import axios from 'axios';
 
-export default function CreateAsset(props) {
+export default function CreateAsset({ setPopUp, setData }) {
 
     const { REACT_APP_BASE_URL } = process.env
-
-    const { setPopUp, setData } = props;
 
     const [asset, setAsset] = useState({
         "type": "",
@@ -31,7 +29,6 @@ export default function CreateAsset(props) {
                         [e.target.value]: e.target.nextSibling.value
                     }
                 })
-                // console.log(asset)
                 break;
             case "metadata":
                 setAsset({
@@ -41,15 +38,12 @@ export default function CreateAsset(props) {
                         [e.target.previousSibling.value]: e.target.value
                     }
                 })
-                // console.log(asset)
                 break;
             default:
                 setAsset({
                     ...asset,
                     [e.target.name]: e.target.value
                 })
-                // console.log(asset)
-                break;
         }
     }
 

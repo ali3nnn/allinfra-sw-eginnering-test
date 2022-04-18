@@ -3,18 +3,10 @@ import axios from 'axios';
 import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from '@mui/icons-material/Edit';
 
-export default function Buttons(props) {
+const { REACT_APP_BASE_URL } = process.env
+const removeAssetFromDb = async (id) => await axios.delete(`${REACT_APP_BASE_URL}/assets/${id}`)
 
-    // console.log(props)
-
-    const { REACT_APP_BASE_URL } = process.env
-    const {
-        setUpdatePopUp,
-        updatePopUp,
-        setUpdatePopUpId,
-        setData,
-        data
-    } = props
+export default function Buttons({ setUpdatePopUp, updatePopUp, setUpdatePopUpId, setData, data, assetid }) {
 
     const updateHandler = async (e) => {
         e.preventDefault();
@@ -38,19 +30,17 @@ export default function Buttons(props) {
         const idToRemove = e.target.attributes.assetid.value
         const dataWithIdRemoved = data.filter(asset => asset._id !== idToRemove)
         const isCreateAssetResult = data[0].createAssetResult || false
-        if(isCreateAssetResult) {
+        if (isCreateAssetResult) {
             setData(["createdItemRemoved"])
         } else {
             setData(dataWithIdRemoved)
         }
     }
 
-    const removeAssetFromDb = async (id) => await axios.delete(`${REACT_APP_BASE_URL}/assets/${id}`)
-
     return (
         <>
-            <span className="updateButton" assetid={props.assetid} onClick={updateHandler}><EditIcon /></span>
-            <span className="removeButton" assetid={props.assetid} onClick={removeHandler}><DeleteIcon /></span>
+            <span className="updateButton noselect" assetid={assetid} onClick={updateHandler}><EditIcon /></span>
+            <span className="removeButton noselect" assetid={assetid} onClick={removeHandler}><DeleteIcon /></span>
         </>
     )
 }

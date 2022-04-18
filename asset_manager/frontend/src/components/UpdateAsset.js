@@ -8,16 +8,15 @@ import {
 } from "reactstrap";
 import axios from 'axios';
 
-export default function UpdateAsset(props) {
+const removeEmptyFields = (data) => {
+    Object.keys(data).forEach((k) => (!data[k] && data[k] !== undefined) && delete
+        data[k]);
+    return data;
+};
+
+export default function UpdateAsset({ updatePopUpId, setUpdatePopUp, setData, data}) {
 
     const { REACT_APP_BASE_URL } = process.env
-
-    const {
-        updatePopUpId,
-        setUpdatePopUp,
-        setData,
-        data
-    } = props;
 
     const [asset, setAsset] = useState({
         "id": updatePopUpId,
@@ -37,7 +36,6 @@ export default function UpdateAsset(props) {
                         [e.target.value]: e.target.nextSibling.value
                     }
                 })
-                // console.log(asset)
                 break;
             case "metadata":
                 setAsset({
@@ -47,23 +45,14 @@ export default function UpdateAsset(props) {
                         [e.target.previousSibling.value]: e.target.value
                     }
                 })
-                // console.log(asset)
                 break;
             default:
                 setAsset({
                     ...asset,
                     [e.target.name]: e.target.value
                 })
-                // console.log(asset)
-                break;
         }
     }
-
-    const removeEmptyFields = (data) => {
-        Object.keys(data).forEach((k) => (!data[k] && data[k] !== undefined) && delete
-            data[k]);
-        return data;
-    };
 
     const onSubmit = async (e) => {
         e.preventDefault();
@@ -72,8 +61,9 @@ export default function UpdateAsset(props) {
         removeEmptyFields(newAsset)
         const response = await axios.patch(`${REACT_APP_BASE_URL}/assets/${id}`, newAsset)
         if (response.status === 201) {
-            const allAssets = await axios.get(`${REACT_APP_BASE_URL}/assets${isCreateAssetResult ? '/' + id : ''}`)
-            setData(allAssets.data.result)
+            const response = await axios.get(`${REACT_APP_BASE_URL}/assets${isCreateAssetResult ? '/' + id : ''}`)
+            const assetsData = response.data.result.reverse()
+            setData(assetsData)
         }
         setUpdatePopUp(false)
     }

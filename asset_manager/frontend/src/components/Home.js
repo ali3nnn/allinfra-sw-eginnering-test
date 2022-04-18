@@ -21,7 +21,6 @@ export default function Home() {
         try {
             setData(["loading"])
             const response = await axios(`${REACT_APP_BASE_URL}/assets`);
-            // console.log("get all", response.data.result)
             const assetsData = response.data.result.reverse()
             setData(assetsData)
         } catch (error) {
