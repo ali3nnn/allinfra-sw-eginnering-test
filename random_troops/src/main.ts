@@ -1,4 +1,3 @@
-// const TroopsController = require('./controller/controller')
 import TroopsController from "./controller/controller";
 import { validateOrReject } from 'class-validator'
 
