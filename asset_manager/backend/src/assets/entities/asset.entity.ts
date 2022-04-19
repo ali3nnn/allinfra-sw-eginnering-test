@@ -1,4 +1,4 @@
-import { Entity, Column, PrimaryGeneratedColumn, BeforeInsert, ObjectIdColumn } from 'typeorm';
+import { Entity, Column, ObjectIdColumn } from 'typeorm';
 // import * as crypto from 'crypto';
 
 @Entity('assets')
@@ -22,4 +22,18 @@ export class Assets {
     // }
     @Column()
     metadata: object;
+
+	@Column()
+	createdAt: number
+    
+	@Column()
+	updatedAt: number
+
+    constructor(partial: Assets) {
+		if (partial) {
+			Object.assign(this, partial)
+			this.createdAt = this.createdAt || +new Date()
+			this.updatedAt = +new Date()
+		}
+	}
 }

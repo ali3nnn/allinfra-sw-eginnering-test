@@ -1,6 +1,6 @@
 import * as mongodb from "mongodb";
 import { Repository } from 'typeorm';
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { CreateAssetDto } from './dto/create-asset.dto';
 import { UpdateAssetDto } from './dto/update-asset.dto';
@@ -22,21 +22,22 @@ export class AssetsService {
 
   async findOne(_id: string) {
     const result = await this.assetsRepository.findOneBy({ _id: new mongodb.ObjectID(_id) });
+    if (!result) {
+      throw new NotFoundException('Asset not found.')
+    }
     return result
   }
 
   async findAll() {
-    try {
-      const result = await this.assetsRepository.find();
-      return result
-    } catch(e) {
-      throw {
-        status: 500
-      }
+    const result = await this.assetsRepository.find();
+    if(!result.length) {
+      throw new NotFoundException('Assets not found.')
     }
+    return result;
   }
 
   async update(id: string, updateAssetDto: UpdateAssetDto) {
+    await this.findOne(id)
     const result = await this.assetsRepository.update(id, updateAssetDto);
     const item = await this.findOne(id)
     return {
@@ -46,9 +47,7 @@ export class AssetsService {
   }
 
   async remove(id: string) {
-    const result = await this.assetsRepository.delete(id);
-    return {
-      result
-    }
+    await this.findOne(id)
+    return this.assetsRepository.delete(id);
   }
 }

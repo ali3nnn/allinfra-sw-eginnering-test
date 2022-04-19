@@ -1,8 +1,9 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, HttpStatus, HttpException, HttpCode } from '@nestjs/common';
-import { ApiCreatedResponse, ApiOperation, ApiHeader, ApiTags, ApiResponse } from '@nestjs/swagger';
+import { Controller, Get, Post, Body, Patch, Param, Delete, HttpStatus, HttpException, HttpCode, UsePipes } from '@nestjs/common';
+import { ApiCreatedResponse, ApiOperation, ApiHeader, ApiTags, ApiResponse, ApiOkResponse, ApiNotFoundResponse, ApiInternalServerErrorResponse, ApiBadRequestResponse } from '@nestjs/swagger';
 import { AssetsService } from './assets.service';
 import { CreateAssetDto } from './dto/create-asset.dto';
 import { UpdateAssetDto } from './dto/update-asset.dto';
+import { AssetNotFound, FindOneResponse, UpdateResponse, DeleteResponse, ServerErrorResponse, FindAllResponse, CreateResponse, BadRequestResponse } from './schemas/assets.schemas';
 
 @ApiTags('Assets Controller')
 @Controller('assets')
@@ -12,43 +13,46 @@ export class AssetsController {
   @Post()
   @HttpCode(HttpStatus.CREATED)
   @ApiOperation({ summary: 'Add a new asset into the database' })
-  @ApiCreatedResponse({ type: CreateAssetDto })
+  @ApiCreatedResponse({
+    type: CreateResponse,
+    isArray: true
+  })
+  @ApiBadRequestResponse({
+    type: BadRequestResponse,
+    isArray: false
+  })
+  @ApiInternalServerErrorResponse({
+    type: ServerErrorResponse
+  })
   async create(@Body() createAssetDto: CreateAssetDto) {
-    try {
-      const asset = await this.assetsService.create(createAssetDto);
-      return {
-        statusCode: HttpStatus.CREATED,
-        message: "Asset added successfully",
-        result: [asset]
-      }
-    } catch (error) {
-      throw new HttpException(`${error}`, HttpStatus.INTERNAL_SERVER_ERROR);
+    const asset = await this.assetsService.create(createAssetDto);
+    return {
+      statusCode: HttpStatus.CREATED,
+      message: "Asset added successfully",
+      result: [asset]
     }
   }
 
   @Get()
   @HttpCode(HttpStatus.OK)
   @ApiOperation({ summary: 'Get all assets from the database' })
-  @ApiCreatedResponse({ type: [CreateAssetDto] })
+  @ApiOkResponse({
+    type: FindAllResponse,
+    isArray: true
+  })
+  @ApiNotFoundResponse({
+    type: AssetNotFound,
+    isArray: false
+  })
+  @ApiInternalServerErrorResponse({
+    type: ServerErrorResponse
+  })
   async findAll() {
-    try {
-      const result = await this.assetsService.findAll();
-
-      if (!result.length) {
-        return {
-          statusCode: HttpStatus.OK,
-          message: `No assets!`,
-          result
-        };
-      }
-
-      return {
-        statusCode: HttpStatus.OK,
-        message: "Assets retrieved successfully",
-        result
-      }
-    } catch (error) {
-      throw new HttpException(error, HttpStatus.INTERNAL_SERVER_ERROR);
+    const result = await this.assetsService.findAll();
+    return {
+      statusCode: HttpStatus.OK,
+      message: "Assets retrieved successfully",
+      result
     }
 
   }
@@ -56,37 +60,57 @@ export class AssetsController {
   @Get(':id')
   @HttpCode(HttpStatus.OK)
   @ApiOperation({ summary: 'Get one asset from the database by ID' })
-  @ApiCreatedResponse({ type: [CreateAssetDto] })
-  async findOne(@Param('id') id: string) {
-
-    try {
-      const result = await this.assetsService.findOne(id);
-      return {
-        statusCode: HttpStatus.OK,
-        message: `Asset retrieved successfully!`,
-        result: [result]
-      };
-
-    } catch (error) {
-      throw new HttpException(`${error}`, HttpStatus.INTERNAL_SERVER_ERROR);
-    }
-
+  @ApiOkResponse({
+    type: FindOneResponse,
+    isArray: true
+  })
+  @ApiNotFoundResponse({
+    type: AssetNotFound,
+    isArray: false
+  })
+  @ApiInternalServerErrorResponse({
+    type: ServerErrorResponse
+  })
+  async findOne(
+    @Param('id')
+    id: string
+  ) {
+    const result = await this.assetsService.findOne(id);
+    return {
+      statusCode: HttpStatus.OK,
+      message: `Asset retrieved successfully!`,
+      result: [result]
+    };
   }
 
   @Patch(':id')
   @HttpCode(HttpStatus.CREATED)
   @ApiOperation({ summary: 'Update asset properties by ID' })
-  @ApiCreatedResponse({ type: UpdateAssetDto })
-  async update(@Param('id') id: string, @Body() updateAssetDto: UpdateAssetDto) {
-    try {
-      const { result, item } = await this.assetsService.update(id, updateAssetDto);
-      return {
-        statusCode: HttpStatus.CREATED,
-        message: `${id} updated successfully!`,
-        result: [item]
-      }
-    } catch (error) {
-      throw new HttpException(`${error}`, HttpStatus.INTERNAL_SERVER_ERROR);
+  @ApiCreatedResponse({
+    type: UpdateResponse,
+    isArray: true
+  })
+  @ApiBadRequestResponse({
+    type: BadRequestResponse,
+    isArray: false
+  })
+  @ApiNotFoundResponse({
+    type: AssetNotFound,
+    isArray: false
+  })
+  @ApiInternalServerErrorResponse({
+    type: ServerErrorResponse
+  })
+  async update(
+    @Param('id') id: string,
+    @Body() updateAssetDto: UpdateAssetDto
+  ) {
+
+    const { item } = await this.assetsService.update(id, updateAssetDto);
+    return {
+      statusCode: HttpStatus.CREATED,
+      message: `${id} updated successfully!`,
+      result: [item]
     }
 
   }
@@ -94,16 +118,26 @@ export class AssetsController {
   @Delete(':id')
   @HttpCode(HttpStatus.OK)
   @ApiOperation({ summary: 'Remove asset by ID' })
-  async remove(@Param('id') id: string) {
-    try {
-      await this.assetsService.remove(id);
-      return {
-        statusCode: HttpStatus.OK,
-        message: `${id} removed successfully!`,
-      }
-    } catch (error) {
-      throw new HttpException(`${error}`, HttpStatus.INTERNAL_SERVER_ERROR);
+  @ApiOkResponse({
+    type: DeleteResponse,
+    isArray: false
+  })
+  @ApiNotFoundResponse({
+    type: AssetNotFound,
+    isArray: true
+  })
+  @ApiInternalServerErrorResponse({
+    type: ServerErrorResponse
+  })
+  async remove(
+    @Param('id')
+    id: string
+  ) {
+    await this.assetsService.remove(id);
+    return {
+      statusCode: HttpStatus.OK,
+      message: `${id} removed successfully!`,
     }
-
   }
 }
+
